@@ -1,40 +1,66 @@
 <%- include('partials/header') %>
 
 <h2>Novel Library</h2>
-<% if (user) { %>
-    <p>Welcome back, <%= user.username %>! Pick a novel to read.</p>
-<% } else { %>
-    <p>Please log in to read novels.</p>
+<!-- Continue Reading Banner -->
+<% if (continueReading) { %>
+    <div class="continue-reading-banner">
+        <div>
+            <span class="continue-label">Continue Reading</span>
+            <h3><%= continueReading.novel_title %></h3>
+            <p>Up next: <%= continueReading.chapter_title %></p>
+        </div>
+        <a href="/novel/<%= continueReading.novel_id %>/chapter/<%= continueReading.chapter_id %>" class="btn">Jump back in &rarr;</a>
+    </div>
 <% } %>
 
+<!-- Search & Filter Form -->
+<form action="/" method="GET" class="search-bar">
+    <input type="text" name="search" placeholder="Search by title..." value="<%= search %>">
+    <select name="genre">
+        <option value="">All Genres</option>
+        <option value="Fantasy" <%= genreFilter === 'Fantasy' ? 'selected' : '' %>>Fantasy</option>
+        <option value="Sci-Fi" <%= genreFilter === 'Sci-Fi' ? 'selected' : '' %>>Sci-Fi</option>
+        <option value="Romance" <%= genreFilter === 'Romance' ? 'selected' : '' %>>Romance</option>
+        <option value="Mystery" <%= genreFilter === 'Mystery' ? 'selected' : '' %>>Mystery</option>
+        <option value="General" <%= genreFilter === 'General' ? 'selected' : '' %>>General</option>
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
 <div class="novel-grid">
-    <% novels.forEach(function(novel) { %>
-        <div class="novel-card">
-            <% if (novel.cover_image) { %>
-                <img src="<%= novel.cover_image %>" alt="Cover" class="cover-img">
-            <% } else { %>
-                <div class="cover-placeholder">No Cover</div>
-            <% } %>
-            <h3><%= novel.title %></h3>
-            <p><%= novel.description %></p>
-            <a href="/novel/<%= novel.id %>" class="btn-sm">Read Now</a>
-        </div>
-    <% }) %>
+    <% if (novels.length === 0) { %>
+        <p>No novels found.</p>
+    <% } else { %>
+        <% novels.forEach(function(novel) { %>
+            <div class="novel-card">
+                <% if (novel.cover_image) { %>
+                    <img src="<%= novel.cover_image %>" alt="Cover" class="cover-img">
+                <% } else { %>
+                    <div class="cover-placeholder">No Cover</div>
+                <% } %>
+                <div class="card-body">
+                    <h3><%= novel.title %></h3>
+                    <span class="genre-tag"><%= novel.genre %></span>
+                    <p><%= novel.description %></p>
+                    <a href="/novel/<%= novel.id %>" class="btn-sm">Read Now</a>
+                </div>
+            </div>
+        <% }) %>
+    <% } %>
 </div>
 
-<!-- Pagination Controls -->
 <% if (totalPages > 1) { %>
     <div class="pagination">
         <% if (currentPage > 1) { %>
-            <a href="/?page=<%= currentPage - 1 %>">&laquo; Prev</a>
+            <a href="/?page=<%= currentPage - 1 %>&search=<%= search %>&genre=<%= genreFilter %>">&laquo; Prev</a>
         <% } %>
         
         <% for (let i = 1; i <= totalPages; i++) { %>
-            <a href="/?page=<%= i %>" class="<%= i === currentPage ? 'active' : '' %>"><%= i %></a>
+            <a href="/?page=<%= i %>&search=<%= search %>&genre=<%= genreFilter %>" class="<%= i === currentPage ? 'active' : '' %>"><%= i %></a>
         <% } %>
 
         <% if (currentPage < totalPages) { %>
-            <a href="/?page=<%= currentPage + 1 %>">Next &raquo;</a>
+            <a href="/?page=<%= currentPage + 1 %>&search=<%= search %>&genre=<%= genreFilter %>">Next &raquo;</a>
         <% } %>
     </div>
 <% } %>

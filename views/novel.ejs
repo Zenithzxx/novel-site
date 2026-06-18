@@ -1,27 +1,36 @@
 <%- include('partials/header') %>
-
 <article class="novel-content">
+    <% if (novel.cover_image) { %>
+        <img src="<%= novel.cover_image %>" style="max-width: 300px; display:block; margin: 0 auto 20px;">
+    <% } %>
     <h2><%= novel.title %></h2>
     <p class="description"><%= novel.description %></p>
-    
+
     <div class="favorite-section">
-        <% if (user && user.role === 'reader') { %>
-            <% if (isFavorited) { %>
-                <form action="/favorites/remove/<%= novel.id %>" method="POST">
-                    <button type="submit" class="btn btn-favorited">★ Remove from Library</button>
-                </form>
-            <% } else { %>
-                <form action="/favorites/add/<%= novel.id %>" method="POST">
-                    <button type="submit" class="btn">☆ Add to Library</button>
-                </form>
-            <% } %>
+        <% if (isFavorited) { %>
+            <form action="/favorites/remove/<%= novel.id %>" method="POST"><button type="submit" class="btn btn-favorited">★ Remove from Library</button></form>
+        <% } else { %>
+            <form action="/favorites/add/<%= novel.id %>" method="POST"><button type="submit" class="btn">☆ Add to Library</button></form>
         <% } %>
     </div>
 
     <hr>
-    <div class="content-body">
-        <%= novel.content %>
-    </div>
+    <h3>Table of Contents</h3>
+    <% if (chapters.length === 0) { %>
+        <p>No chapters published yet.</p>
+    <% } else { %>
+                <ul class="chapter-list">
+            <% chapters.forEach(function(chapter, index) { %>
+                <li>
+                    <% if (readChapters.includes(chapter.id)) { %>
+                        <span style="color: #27ae60; margin-right: 10px;">&#10004;</span>
+                    <% } else { %>
+                        <span style="color: #ccc; margin-right: 10px;">&#9744;</span>
+                    <% } %>
+                    <a href="/novel/<%= novel.id %>/chapter/<%= chapter.id %>">Chapter <%= index + 1 %>: <%= chapter.title %></a>
+                </li>
+            <% }) %>
+        </ul>
+    <% } %>
 </article>
-
 <%- include('partials/footer') %>

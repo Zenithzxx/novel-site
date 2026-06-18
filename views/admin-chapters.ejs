@@ -1,0 +1,23 @@
+<%- include('partials/header') %>
+<h2>Chapters for: <%= novel.title %></h2>
+<a href="/admin/novel/<%= novel.id %>/chapters/new" class="btn">+ Add Chapter</a>
+<a href="/admin-dashboard" class="btn" style="background:#95a5a6;">Back to Novels</a>
+
+<table class="novel-table">
+    <thead><tr><th>Title</th><th>Schedule Date</th><th>Actions</th></tr></thead>
+    <tbody>
+        <% chapters.forEach(function(chapter) { %>
+            <tr>
+                <td><%= chapter.title %></td>
+                <td><%= new Date(chapter.publish_date).toLocaleString() %></td>
+                <td>
+                    <a href="/admin/chapter/<%= chapter.id %>/edit" class="btn-sm">Edit</a>
+                    <form action="/admin/chapter/<%= chapter.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Delete this chapter?');">
+                        <button type="submit" class="btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+<%- include('partials/footer') %>

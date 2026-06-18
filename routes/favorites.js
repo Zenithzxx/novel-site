@@ -1,4 +1,5 @@
 const express = require('express');
+const checkAchievements = require('../helpers/achievements');
 const router = express.Router();
 const db = require('../db');
 const { requireLogin } = require('../middleware/authMiddleware');
@@ -27,6 +28,8 @@ router.post('/favorites/add/:novelId', requireLogin, async (req, res) => {
             [req.session.user.id, novelId]);
         // Explicitly redirect to the novel page
         res.redirect(`/novel/${novelId}`);
+        //Check for achievements
+        await checkAchievements(req.session.user.id);
     } catch (err) {
         // If it's already in favorites, just redirect back to the novel
         res.redirect(`/novel/${novelId}`);

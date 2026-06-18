@@ -5,15 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novel Pub</title>
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Prevent flash of white screen before dark mode loads -->
+    <script>
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
 </head>
 <body>
     <nav>
         <h1><a href="/" style="text-decoration:none; color:white;">NovelPub</a></h1>
         <div>
+            <a href="#" id="dark-mode-toggle" style="font-size: 20px;">🌙</a>
             <% if (user) { %>
-                <% if (user.role === 'reader') { %>
-                    <a href="/my-library">My Library</a>
-                    <a href="/profile">My Profile</a>
+                <a href="/my-library">My Library</a>
+                <a href="/profile">My Profile</a>
+                <% if (user.role === 'admin') { %>
+                    <a href="/admin-dashboard" style="background: #e67e22; padding: 5px 10px; border-radius: 4px; color: white;">Admin</a>
                 <% } %>
                 <a href="/logout">Logout</a>
             <% } else { %>

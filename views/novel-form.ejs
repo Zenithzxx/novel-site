@@ -7,22 +7,33 @@
 <h2><%= novel ? 'Edit Novel' : 'Post a New Novel' %></h2>
 
 <form action="<%= action %>" method="POST" enctype="multipart/form-data">
-    <input type="text" name="title" placeholder="Novel Title" value="<%= novel ? novel.title : '' %>" required>
+    
+    <label>Novel Title:</label>
+    <input type="text" name="title" placeholder="Enter Novel Title" value="<%= novel ? novel.title : '' %>" required>
+    
+    <label>Short Description:</label>
     <input type="text" name="description" placeholder="Short Description" value="<%= novel ? novel.description : '' %>" required>
     
+    <label>Genre (e.g., Fantasy, Sci-Fi, Romance):</label>
+    <input type="text" name="genre" placeholder="Genre" value="<%= novel ? novel.genre : 'General' %>" required>
+
     <label>Cover Image:</label>
     <input type="file" name="coverImage" accept="image/*">
     <% if (novel && novel.cover_image) { %>
         <p>Current cover:</p>
-        <img src="<%= novel.cover_image %>" style="max-width: 150px; margin-bottom: 10px;">
+        <img src="<%= novel.cover_image %>" style="max-width: 150px; margin-bottom: 10px; border-radius: 4px;">
     <% } %>
 
+    <label>Novel Content:</label>
     <!-- Quill Editor Container -->
-    <div id="editor" style="margin-bottom: 15px;">
-        <p><%- novel ? novel.content : '' %></p>
+    <div id="editor" style="margin-bottom: 15px; background: white;">
+        <%- novel ? novel.content : '' %>
     </div>
     <!-- Hidden input to hold the HTML content for the form submission -->
     <input type="hidden" name="content" id="content-input">
+
+    <label>Schedule Novel Publish Date:</label>
+    <input type="datetime-local" name="publish_date" value="<%= novel ? new Date(novel.publish_date).toISOString().slice(0,16) : '' %>" required>
 
     <button type="submit" id="save-btn">Save Novel</button>
 </form>

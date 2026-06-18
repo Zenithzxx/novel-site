@@ -1,3 +1,26 @@
     </main>
+
+    <script>
+        const toggle = document.getElementById('dark-mode-toggle');
+        if (toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.documentElement.classList.toggle('dark-mode');
+                
+                if (document.documentElement.classList.contains('dark-mode')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                    toggle.textContent = '☀️';
+                } else {
+                    localStorage.setItem('darkMode', 'disabled');
+                    toggle.textContent = '🌙';
+                }
+            });
+
+            // Set initial icon based on mode
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                toggle.textContent = '☀️';
+            }
+        }
+    </script>
 </body>
 </html>
