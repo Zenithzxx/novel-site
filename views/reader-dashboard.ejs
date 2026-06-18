@@ -10,11 +10,33 @@
 <div class="novel-grid">
     <% novels.forEach(function(novel) { %>
         <div class="novel-card">
+            <% if (novel.cover_image) { %>
+                <img src="<%= novel.cover_image %>" alt="Cover" class="cover-img">
+            <% } else { %>
+                <div class="cover-placeholder">No Cover</div>
+            <% } %>
             <h3><%= novel.title %></h3>
             <p><%= novel.description %></p>
             <a href="/novel/<%= novel.id %>" class="btn-sm">Read Now</a>
         </div>
     <% }) %>
 </div>
+
+<!-- Pagination Controls -->
+<% if (totalPages > 1) { %>
+    <div class="pagination">
+        <% if (currentPage > 1) { %>
+            <a href="/?page=<%= currentPage - 1 %>">&laquo; Prev</a>
+        <% } %>
+        
+        <% for (let i = 1; i <= totalPages; i++) { %>
+            <a href="/?page=<%= i %>" class="<%= i === currentPage ? 'active' : '' %>"><%= i %></a>
+        <% } %>
+
+        <% if (currentPage < totalPages) { %>
+            <a href="/?page=<%= currentPage + 1 %>">Next &raquo;</a>
+        <% } %>
+    </div>
+<% } %>
 
 <%- include('partials/footer') %>

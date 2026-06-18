@@ -41,3 +41,17 @@ button:hover, .btn:hover { background: #2980b9; }
 
 /* Profile textarea sizing */
 .novel-create-form textarea { min-height: 120px; }
+
+/* Cover Images & Pagination */
+.novel-card .cover-img { width: 100%; height: 200px; object-fit: cover; border-radius: 4px 4px 0 0; margin-bottom: 10px; }
+.cover-placeholder { width: 100%; height: 200px; background: #ecf0f1; display: flex; align-items: center; justify-content: center; color: #bdc3c7; border-radius: 4px 4px 0 0; margin-bottom: 10px; }
+.novel-card { padding-top: 0; }
+.novel-card h3, .novel-card p { padding: 0 10px; }
+
+/* Pagination */
+.pagination { display: flex; justify-content: center; margin-top: 30px; gap: 5px; }
+.pagination a { padding: 8px 12px; border: 1px solid #ddd; text-decoration: none; color: #333; border-radius: 4px; }
+.pagination a.active { background: #3498db; color: white; border-color: #3498db; }
+
+/* Quill Editor height */
+#editor { min-height: 300px; background: white; margin-bottom: 10px;}
