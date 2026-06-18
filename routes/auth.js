@@ -16,6 +16,7 @@ router.post('/register', async (req, res) => {
         await db.query('INSERT INTO users (username, password, role) VALUES (?, ?, "reader")', [username, hashedPassword]);
         res.redirect('/login');
     } catch (err) {
+        console.error("Registration Error:", err.message); // <-- ADD THIS LINE
         res.render('register', { error: 'Username already taken or error occurred.' });
     }
 });
