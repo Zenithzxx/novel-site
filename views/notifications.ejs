@@ -1,0 +1,21 @@
+<%- include('partials/header') %>
+
+<h2>Notifications</h2>
+
+<% if (notifications.length === 0) { %>
+    <p>You have no notifications yet. Follow some novels to get updates!</p>
+<% } else { %>
+    <div class="notification-list">
+        <% notifications.forEach(function(n) { %>
+            <div class="notification-card">
+                <a href="/novel/<%= n.novel_id %>/chapter/<%= n.chapter_id %>">
+                    <strong><%= n.message %></strong>
+                    <span>in <%= n.novel_title %></span>
+                    <small><%= new Date(n.created_at).toLocaleString() %></small>
+                </a>
+            </div>
+        <% }) %>
+    </div>
+<% } %>
+
+<%- include('partials/footer') %>

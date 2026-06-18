@@ -15,9 +15,14 @@
 <body>
     <nav>
         <h1><a href="/" style="text-decoration:none; color:white;">NovelPub</a></h1>
-        <div>
+                <div>
             <a href="#" id="dark-mode-toggle" style="font-size: 20px;">🌙</a>
             <% if (user) { %>
+                <a href="/notifications" style="position: relative;">🔔
+                    <% if (unreadNotifications > 0) { %>
+                        <span style="background: red; color: white; border-radius: 50%; padding: 1px 5px; font-size: 10px; position: absolute; top: -5px; right: -8px;"><%= unreadNotifications %></span>
+                    <% } %>
+                </a>
                 <a href="/my-library">My Library</a>
                 <a href="/profile">My Profile</a>
                 <% if (user.role === 'admin') { %>

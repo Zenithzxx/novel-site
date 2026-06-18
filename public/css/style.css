@@ -126,3 +126,53 @@ button:hover, .btn:hover { opacity: 0.9; }
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
+/* Custom Reader Settings */
+.reader-settings { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: var(--placeholder-bg); 
+    padding: 10px 15px; 
+    border-radius: 8px; 
+    margin-bottom: 25px; 
+    border: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.font-controls, .theme-controls { display: flex; align-items: center; gap: 8px; }
+.font-controls span, .theme-controls span { font-size: 14px; color: var(--text-color); }
+.theme-btn { 
+    padding: 4px 10px; 
+    background: var(--container-bg); 
+    border: 1px solid var(--border-color); 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-size: 14px; 
+    color: var(--text-color);
+}
+.theme-btn:hover { background: var(--link-color); color: white; }
+
+/* Reading Area Themes */
+.reader-content { 
+    transition: all 0.3s ease; 
+    padding: 25px; 
+    border-radius: 8px; 
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+}
+.reader-light { background: #ffffff; color: #333; }
+.reader-sepia { background: #f4ecd8; color: #5b4636; }
+.reader-dark { background: #2c2c2c; color: #cccccc; }
+
+/* Notifications */
+.notification-list { display: flex; flex-direction: column; gap: 10px; }
+.notification-card { 
+    background: var(--placeholder-bg); 
+    border-left: 4px solid var(--link-color); 
+    padding: 15px; 
+    border-radius: 4px; 
+}
+.notification-card a { text-decoration: none; color: var(--text-color); display: block; }
+.notification-card a span { display: block; font-size: 14px; color: var(--link-color); margin-top: 4px; }
+.notification-card a small { display: block; font-size: 12px; color: #999; margin-top: 4px; }

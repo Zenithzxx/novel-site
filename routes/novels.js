@@ -115,7 +115,7 @@ router.get('/novel/:novelId/chapter/:chapterId', requireLogin, async (req, res) 
         // Increment view count
         await db.query('UPDATE chapters SET views = views + 1 WHERE id = ?', [chapter.id]);
 
-                // Fetch comments
+        // Fetch comments
         const [comments] = await db.query(`
             SELECT comments.*, users.username, users.avatar, users.title 
             FROM comments 
@@ -258,11 +258,28 @@ router.get('/admin/novel/:id/chapters/new', requireLogin, requireAdmin, async (r
 // Handle creating chapter
 router.post('/admin/novel/:id/chapters/create', requireLogin, requireAdmin, async (req, res) => {
     const { title, content, publish_now, publish_date } = req.body;
-    // If publish_now is checked, use current time. Otherwise use the scheduled date.
     const finalDate = publish_now ? new Date() : publish_date;
     try {
-        await db.query('INSERT INTO chapters (novel_id, title, content, publish_date) VALUES (?, ?, ?, ?)', 
+        // 1. Create the chapter
+        const [result] = await db.query('INSERT INTO chapters (novel_id, title, content, publish_date) VALUES (?, ?, ?, ?)', 
             [req.params.id, title, content, finalDate]);
+        const chapterId = result.insertId;
+
+        // 2. Get all users who favorited this novel
+        const [followers] = await db.query('SELECT user_id FROM favorites WHERE novel_id = ?', [req.params.id]);
+
+        // 3. Create a notification for each follower
+        if (followers.length > 0) {
+            let notifQuery = 'INSERT INTO notifications (user_id, novel_id, chapter_id, message) VALUES ';
+            let notifParams = [];
+            followers.forEach((f, index) => {
+                if (index > 0) notifQuery += ', ';
+                notifQuery += '(?, ?, ?, ?)';
+                notifParams.push(f.user_id, req.params.id, chapterId, `New chapter posted: ${title}`);
+            });
+            await db.query(notifQuery, notifParams);
+        }
+
         res.redirect(`/admin/novel/${req.params.id}/chapters`);
     } catch (err) { res.send('Error: ' + err.message); }
 });

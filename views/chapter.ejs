@@ -3,17 +3,33 @@
 <article class="novel-content">
     <h2><%= chapter.title %></h2>
     <a href="/novel/<%= novelId %>" class="btn-sm" style="background:#95a5a6; margin-bottom: 20px; display:inline-block;">&laquo; Back to Table of Contents</a>
-    <hr>
-        <div class="content-body">
+    
+    <!-- Reader Settings Bar -->
+    <div class="reader-settings">
+        <div class="font-controls">
+            <span>Text Size:</span>
+            <button id="font-decrease" class="theme-btn">A-</button>
+            <button id="font-increase" class="theme-btn">A+</button>
+        </div>
+        <div class="theme-controls">
+            <span>Theme:</span>
+            <button data-theme="light" class="theme-btn">Light</button>
+            <button data-theme="sepia" class="theme-btn">Sepia</button>
+            <button data-theme="dark" class="theme-btn">Dark</button>
+        </div>
+    </div>
+
+    <!-- Reading Area (Targeted by JS) -->
+    <div class="content-body reader-content" id="reader-content">
         <%- chapter.content %>
     </div>
     
-        <!-- Prev / Next Chapter Buttons -->
+    <!-- Prev / Next Chapter Buttons -->
     <div style="display: flex; justify-content: space-between; margin-top: 40px; margin-bottom: 40px;">
         <% if (prevChapter) { %>
             <a href="/novel/<%= novelId %>/chapter/<%= prevChapter.id %>" class="btn" style="background:#95a5a6;">&larr; Previous</a>
         <% } else { %>
-            <span></span> <!-- Empty spacer to keep Next button on the right -->
+            <span></span>
         <% } %>
         
         <% if (nextChapter) { %>
@@ -22,20 +38,15 @@
             <span style="color: #777; font-style: italic; align-self: center;">End of Novel</span>
         <% } %>
     </div>
-
 </article>
 
 <!-- Comments Section -->
 <section id="comments" class="comments-section">
     <h3>Comments (<%= comments.length %>)</h3>
-
-    <!-- Comment Form -->
     <form action="/novel/<%= novelId %>/chapter/<%= chapter.id %>/comment" method="POST" class="comment-form">
         <textarea name="comment" placeholder="Leave your thoughts..." required></textarea>
         <button type="submit">Post Comment</button>
     </form>
-
-    <!-- Display Comments -->
     <div class="comment-list">
         <% comments.forEach(function(c) { %>
             <div class="comment-card">
@@ -46,14 +57,54 @@
                 <% } %>
                 <div class="comment-body">
                     <strong><%= c.username %></strong> 
-                            <% if (c.title) { %>
-                                    <span class="achievement-badge"><%= c.title %></span>
-                            <% } %> <span class="comment-date"><%= new Date(c.created_at).toLocaleString() %></span>
+                    <% if (c.title) { %>
+                        <span class="achievement-badge"><%= c.title %></span>
+                    <% } %>
+                    <span class="comment-date"><%= new Date(c.created_at).toLocaleString() %></span>
                     <p><%= c.comment %></p>
                 </div>
             </div>
         <% }) %>
     </div>
 </section>
+
+<script>
+    const readerContent = document.getElementById('reader-content');
+
+    // --- Font Size Logic ---
+    let currentFontSize = localStorage.getItem('readerFontSize') ? parseInt(localStorage.getItem('readerFontSize')) : 18;
+    readerContent.style.fontSize = currentFontSize + 'px';
+
+    document.getElementById('font-increase').addEventListener('click', () => {
+        currentFontSize += 2;
+        readerContent.style.fontSize = currentFontSize + 'px';
+        localStorage.setItem('readerFontSize', currentFontSize);
+    });
+
+    document.getElementById('font-decrease').addEventListener('click', () => {
+        if (currentFontSize > 12) {
+            currentFontSize -= 2;
+            readerContent.style.fontSize = currentFontSize + 'px';
+            localStorage.setItem('readerFontSize', currentFontSize);
+        }
+    });
+
+    // --- Reading Theme Logic ---
+    let currentTheme = localStorage.getItem('readerTheme') || 'light';
+    applyTheme(currentTheme);
+
+    document.querySelectorAll('.theme-controls .theme-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            let theme = e.target.getAttribute('data-theme');
+            applyTheme(theme);
+            localStorage.setItem('readerTheme', theme);
+        });
+    });
+
+    function applyTheme(theme) {
+        readerContent.classList.remove('reader-light', 'reader-sepia', 'reader-dark');
+        readerContent.classList.add('reader-' + theme);
+    }
+</script>
 
 <%- include('partials/footer') %>

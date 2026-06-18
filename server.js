@@ -1,3 +1,4 @@
+const db = require('./db');
 const express = require('express');
 const session = require('express-session');
 const dotenv = require('dotenv');
@@ -25,9 +26,19 @@ app.use(session({
     cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
 }));
 
-// Make user info available to all EJS templates
-app.use((req, res, next) => {
+// Make user info and notifications available to all EJS templates
+app.use(async (req, res, next) => {
     res.locals.user = req.session.user || null;
+    res.locals.unreadNotifications = 0; // Default to 0
+    
+    if (req.session.user) {
+        try {
+            const [notifRows] = await db.query('SELECT COUNT(*) as count FROM notifications WHERE user_id = ? AND is_read = FALSE', [req.session.user.id]);
+            res.locals.unreadNotifications = notifRows[0].count;
+        } catch (err) {
+            console.error('Notif middleware error:', err.message);
+        }
+    }
     next();
 });
 
@@ -42,9 +53,11 @@ app.use('/', novelRoutes);
 // Favorites & Profile Routes
 const favoriteRoutes = require('./routes/favorites');
 const profileRoutes = require('./routes/profile');
+const notificationRoutes = require('./routes/notifications');
 
 app.use('/', favoriteRoutes);
 app.use('/', profileRoutes);
+app.use('/', notificationRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 3000;
