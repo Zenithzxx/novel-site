@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+
+<h2><%= novel ? 'Edit Novel' : 'Post a New Novel' %></h2>
+
+<form action="<%= action %>" method="POST" class="novel-create-form">
+    <input type="text" name="title" placeholder="Novel Title" value="<%= novel ? novel.title : '' %>" required>
+    <input type="text" name="description" placeholder="Short Description" value="<%= novel ? novel.description : '' %>" required>
+    <textarea name="content" placeholder="Write your novel here..." required><%= novel ? novel.content : '' %></textarea>
+    <button type="submit">Save Novel</button>
+</form>
+
+<%- include('partials/footer') %>

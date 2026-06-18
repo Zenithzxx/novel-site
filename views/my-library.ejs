@@ -1,0 +1,20 @@
+<%- include('partials/header') %>
+
+<h2>My Library</h2>
+<p>Your saved novels will appear here.</p>
+
+<% if (novels.length === 0) { %>
+    <p style="margin-top: 20px; color: #777;">You haven't added any novels to your library yet.</p>
+<% } else { %>
+    <div class="novel-grid">
+        <% novels.forEach(function(novel) { %>
+            <div class="novel-card">
+                <h3><%= novel.title %></h3>
+                <p><%= novel.description %></p>
+                <a href="/novel/<%= novel.id %>" class="btn-sm">Read Now</a>
+            </div>
+        <% }) %>
+    </div>
+<% } %>
+
+<%- include('partials/footer') %>

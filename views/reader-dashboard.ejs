@@ -1,0 +1,20 @@
+<%- include('partials/header') %>
+
+<h2>Novel Library</h2>
+<% if (user) { %>
+    <p>Welcome back, <%= user.username %>! Pick a novel to read.</p>
+<% } else { %>
+    <p>Please log in to read novels.</p>
+<% } %>
+
+<div class="novel-grid">
+    <% novels.forEach(function(novel) { %>
+        <div class="novel-card">
+            <h3><%= novel.title %></h3>
+            <p><%= novel.description %></p>
+            <a href="/novel/<%= novel.id %>" class="btn-sm">Read Now</a>
+        </div>
+    <% }) %>
+</div>
+
+<%- include('partials/footer') %>

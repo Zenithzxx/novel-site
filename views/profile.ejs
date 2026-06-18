@@ -1,0 +1,14 @@
+<%- include('partials/header') %>
+
+<h2><%= user.username %>'s Profile</h2>
+<p><strong>Account Type:</strong> <%= user.role %></p>
+
+<% if (success) { %> <p style="color:green;"><%= success %></p> <% } %>
+
+<h3>Edit Bio</h3>
+<form action="/profile/update" method="POST" class="novel-create-form">
+    <textarea name="bio" placeholder="Tell others about yourself..."><%= user.bio ? user.bio : '' %></textarea>
+    <button type="submit">Update Profile</button>
+</form>
+
+<%- include('partials/footer') %>

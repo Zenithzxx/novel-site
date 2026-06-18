@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+
+<h2>Admin Dashboard</h2>
+<p>Welcome, <%= user.username %>! You can manage your novels here.</p>
+<a href="/novels/new" class="btn">+ Post New Novel</a>
+
+<table class="novel-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% novels.forEach(function(novel) { %>
+            <tr>
+                <td><%= novel.title %></td>
+                <td><%= novel.description.substring(0, 50) %>...</td>
+                <td>
+                    <a href="/novels/<%= novel.id %>/edit" class="btn-sm">Edit</a>
+                    <form action="/novels/<%= novel.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                        <button type="submit" class="btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<%- include('partials/footer') %>

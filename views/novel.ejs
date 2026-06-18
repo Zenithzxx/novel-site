@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+
+<article class="novel-content">
+    <h2><%= novel.title %></h2>
+    <p class="description"><%= novel.description %></p>
+    
+    <div class="favorite-section">
+        <% if (user && user.role === 'reader') { %>
+            <% if (isFavorited) { %>
+                <form action="/favorites/remove/<%= novel.id %>" method="POST">
+                    <button type="submit" class="btn btn-favorited">★ Remove from Library</button>
+                </form>
+            <% } else { %>
+                <form action="/favorites/add/<%= novel.id %>" method="POST">
+                    <button type="submit" class="btn">☆ Add to Library</button>
+                </form>
+            <% } %>
+        <% } %>
+    </div>
+
+    <hr>
+    <div class="content-body">
+        <%= novel.content %>
+    </div>
+</article>
+
+<%- include('partials/footer') %>
