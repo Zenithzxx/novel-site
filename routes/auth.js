@@ -13,10 +13,11 @@ router.post('/register', async (req, res) => {
     const { username, password } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        await db.query('INSERT INTO users (username, password, role) VALUES (?, ?, "reader")', [username, hashedPassword]);
+        // Change "reader" to 'reader'
+        await db.query("INSERT INTO users (username, password, role) VALUES (?, ?, 'reader')", [username, hashedPassword]);
         res.redirect('/login');
     } catch (err) {
-        console.error("Registration Error:", err.message); // <-- ADD THIS LINE
+        console.error("Registration Error:", err.message);
         res.render('register', { error: 'Username already taken or error occurred.' });
     }
 });
