@@ -1,10 +1,6 @@
 <%- include('partials/header') %>
+
 <article class="novel-content">
-    <h2><%= novel.title %></h2>
-    <p class="description"><%= novel.description %></p>
-    <% if (novel.cover_image) { %>
-        <img src="<%= novel.cover_image %>" style="max-width: 300px; display:block; margin: 0 auto 20px;">
-    <% } %>
     <h2><%= novel.title %></h2>
     <p class="description"><%= novel.description %></p>
 
@@ -17,11 +13,17 @@
     </div>
 
     <hr>
+    
+    <div class="content-body">
+        <%- novel.content %>
+    </div>
+
+    <hr>
     <h3>Table of Contents</h3>
     <% if (chapters.length === 0) { %>
         <p>No chapters published yet.</p>
     <% } else { %>
-            <ul class="chapter-list">
+        <ul class="chapter-list">
             <% chapters.forEach(function(chapter, index) { %>
                 <li>
                     <% if (readChapters.includes(chapter.id)) { %>
@@ -35,4 +37,5 @@
         </ul>
     <% } %>
 </article>
+
 <%- include('partials/footer') %>
