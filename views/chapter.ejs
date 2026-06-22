@@ -1,103 +1,111 @@
 <%- include('partials/header') %>
 
-<article class="novel-content">
-    <h2><%= chapter.title %></h2>
-    <a href="/novel/<%= novelId %>" class="btn-sm" style="background:#95a5a6; margin-bottom: 20px; display:inline-block;">&laquo; Back to Table of Contents</a>
+<div class="reader-workspace" id="readerWorkspace" data-reader-theme="light">
     
-    <!-- Reader Settings Bar -->
-    <div class="reader-settings">
-        <div class="font-controls">
-            <span>Text Size:</span>
-            <button id="font-decrease" class="theme-btn">A-</button>
-            <button id="font-increase" class="theme-btn">A+</button>
+    <nav class="reader-settings-bar">
+        <div class="settings-container">
+            <div class="setting-group">
+                <button class="setting-btn" id="fontDecrease" aria-label="Decrease Font Size">A-</button>
+                <button class="setting-btn" id="fontIncrease" aria-label="Increase Font Size">A+</button>
+            </div>
+            <div class="setting-group">
+                <div class="theme-swatch swatch-light" data-theme-target="light" title="Light Theme"></div>
+                <div class="theme-swatch swatch-sepia" data-theme-target="sepia" title="Warm Sepia Theme"></div>
+                <div class="theme-swatch swatch-dark" data-theme-target="dark" title="Deep Charcoal Theme"></div>
+            </div>
         </div>
-        <div class="theme-controls">
-            <span>Theme:</span>
-            <button data-theme="light" class="theme-btn">Light</button>
-            <button data-theme="sepia" class="theme-btn">Sepia</button>
-            <button data-theme="dark" class="theme-btn">Dark</button>
-        </div>
-    </div>
+    </nav>
 
-    <!-- Reading Area (Targeted by JS) -->
-    <div class="content-body reader-content" id="reader-content">
-        <%- chapter.content %>
-    </div>
-    
-    <!-- Prev / Next Chapter Buttons -->
-    <div style="display: flex; justify-content: space-between; margin-top: 40px; margin-bottom: 40px;">
-        <% if (prevChapter) { %>
-            <a href="/novel/<%= novelId %>/chapter/<%= prevChapter.id %>" class="btn" style="background:#95a5a6;">&larr; Previous</a>
-        <% } else { %>
-            <span></span>
-        <% } %>
+    <main class="reader-container">
+        <header class="chapter-header">
+            <div class="chapter-meta">Chapter</div>
+            <h1 class="chapter-title"><%= chapter.title %></h1>
+        </header>
+
+        <article class="reading-content" id="readingTextBody">
+            <%- chapter.content %>
+        </article>
+
+        <nav class="reader-navigation">
+            <% if (prevChapter) { %>
+                <button class="btn-nav" onclick="window.location.href='/novel/<%= novelId %>/chapter/<%= prevChapter.id %>'">Previous Chapter</button>
+            <% } else { %>
+                <div></div> 
+            <% } %>
+            
+            <% if (nextChapter) { %>
+                <button class="btn-nav" onclick="window.location.href='/novel/<%= novelId %>/chapter/<%= nextChapter.id %>'">Next Chapter</button>
+            <% } else { %>
+                <button class="btn-nav" onclick="window.location.href='/novel/<%= novelId %>'">Return to Synopsis</button>
+            <% } %>
+        </nav>
+    </main>
+
+    <section class="comments-section">
+        <h2 class="section-heading">Discussion (<%= comments.length %>)</h2>
         
-        <% if (nextChapter) { %>
-            <a href="/novel/<%= novelId %>/chapter/<%= nextChapter.id %>" class="btn" style="font-size: 18px;">Next Chapter &rarr;</a>
-        <% } else { %>
-            <span style="color: #777; font-style: italic; align-self: center;">End of Novel</span>
-        <% } %>
-    </div>
-</article>
+        <form class="comment-form" action="/novel/<%= novelId %>/chapter/<%= chapter.id %>/comment" method="POST">
+            <textarea name="comment" placeholder="Join the discussion, share theories..." required></textarea>
+            <button type="submit" class="btn-primary" style="padding: 0.65rem 1.75rem; font-size: 0.9rem;">Post Comment</button>
+        </form>
 
-<!-- Comments Section -->
-<section id="comments" class="comments-section">
-    <h3>Comments (<%= comments.length %>)</h3>
-    <form action="/novel/<%= novelId %>/chapter/<%= chapter.id %>/comment" method="POST" class="comment-form">
-        <textarea name="comment" placeholder="Leave your thoughts..." required></textarea>
-        <button type="submit">Post Comment</button>
-    </form>
-    <div class="comment-list">
-        <% comments.forEach(function(c) { %>
-            <div class="comment-card">
-    <div class="comment-body">
-        <strong><%= c.username %></strong> 
-        <% if (c.title) { %><span class="achievement-badge"><%= c.title %></span><% } %>
-        <span class="comment-date"><%= new Date(c.created_at).toLocaleString() %></span>
-        <p><%= c.comment %></p>
-    </div>
+        <div class="comment-thread">
+            <% comments.forEach(comment => { %>
+                <div class="comment-card">
+                    <div class="avatar-fallback">
+                        <%= comment.username.charAt(0).toUpperCase() %>
+                    </div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author"><%= comment.username %></span>
+                            <% if(comment.title) { %>
+                                <span class="badge"><%= comment.title %></span>
+                            <% } %>
+                            <span class="comment-time">&bull; <%= new Date(comment.created_at).toLocaleString() %></span>
+                        </div>
+                        <p class="comment-body"><%= comment.comment %></p>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
 </div>
-        <% }) %>
-    </div>
-</section>
 
 <script>
-    const readerContent = document.getElementById('reader-content');
+    document.addEventListener('DOMContentLoaded', () => {
+        const workspace = document.getElementById('readerWorkspace');
+        const textBody = document.getElementById('readingTextBody');
+        
+        let currentFontSize = parseFloat(localStorage.getItem('reader-font-scale')) || 1.15;
+        let activeReaderTheme = localStorage.getItem('reader-theme-state') || 'light';
+        
+        textBody.style.setProperty('--reader-font-size', `${currentFontSize}rem`);
+        workspace.setAttribute('data-reader-theme', activeReaderTheme);
 
-    // --- Font Size Logic ---
-    let currentFontSize = localStorage.getItem('readerFontSize') ? parseInt(localStorage.getItem('readerFontSize')) : 18;
-    readerContent.style.fontSize = currentFontSize + 'px';
+        document.getElementById('fontIncrease').addEventListener('click', () => {
+            if(currentFontSize < 1.7) {
+                currentFontSize += 0.05;
+                textBody.style.setProperty('--reader-font-size', `${currentFontSize}rem`);
+                localStorage.setItem('reader-font-scale', currentFontSize);
+            }
+        });
 
-    document.getElementById('font-increase').addEventListener('click', () => {
-        currentFontSize += 2;
-        readerContent.style.fontSize = currentFontSize + 'px';
-        localStorage.setItem('readerFontSize', currentFontSize);
-    });
+        document.getElementById('fontDecrease').addEventListener('click', () => {
+            if(currentFontSize > 0.9) {
+                currentFontSize -= 0.05;
+                textBody.style.setProperty('--reader-font-size', `${currentFontSize}rem`);
+                localStorage.setItem('reader-font-scale', currentFontSize);
+            }
+        });
 
-    document.getElementById('font-decrease').addEventListener('click', () => {
-        if (currentFontSize > 12) {
-            currentFontSize -= 2;
-            readerContent.style.fontSize = currentFontSize + 'px';
-            localStorage.setItem('readerFontSize', currentFontSize);
-        }
-    });
-
-    // --- Reading Theme Logic ---
-    let currentTheme = localStorage.getItem('readerTheme') || 'light';
-    applyTheme(currentTheme);
-
-    document.querySelectorAll('.theme-controls .theme-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            let theme = e.target.getAttribute('data-theme');
-            applyTheme(theme);
-            localStorage.setItem('readerTheme', theme);
+        document.querySelectorAll('.theme-swatch').forEach(swatch => {
+            swatch.addEventListener('click', (e) => {
+                const selectedTheme = e.target.getAttribute('data-theme-target');
+                workspace.setAttribute('data-reader-theme', selectedTheme);
+                localStorage.setItem('reader-theme-state', selectedTheme);
+            });
         });
     });
-
-    function applyTheme(theme) {
-        readerContent.classList.remove('reader-light', 'reader-sepia', 'reader-dark');
-        readerContent.classList.add('reader-' + theme);
-    }
 </script>
 
 <%- include('partials/footer') %>
