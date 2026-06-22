@@ -50,20 +50,13 @@
     <div class="comment-list">
         <% comments.forEach(function(c) { %>
             <div class="comment-card">
-                <% if (c.avatar) { %>
-                    <img src="<%= c.avatar %>" class="comment-avatar">
-                <% } else { %>
-                    <div class="comment-avatar-placeholder"><%= c.username.charAt(0).toUpperCase() %></div>
-                <% } %>
-                <div class="comment-body">
-                    <strong><%= c.username %></strong> 
-                    <% if (c.title) { %>
-                        <span class="achievement-badge"><%= c.title %></span>
-                    <% } %>
-                    <span class="comment-date"><%= new Date(c.created_at).toLocaleString() %></span>
-                    <p><%= c.comment %></p>
-                </div>
-            </div>
+    <div class="comment-body">
+        <strong><%= c.username %></strong> 
+        <% if (c.title) { %><span class="achievement-badge"><%= c.title %></span><% } %>
+        <span class="comment-date"><%= new Date(c.created_at).toLocaleString() %></span>
+        <p><%= c.comment %></p>
+    </div>
+</div>
         <% }) %>
     </div>
 </section>

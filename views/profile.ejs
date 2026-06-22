@@ -1,24 +1,9 @@
 <%- include('partials/header') %>
-
 <h2>My Profile</h2>
-<h2><%= user.username %>'s Profile</h2>
-<% if (user.title) { %>
-    <p><span class="achievement-badge"><%= user.title %></span></p>
-<% } %>
 <% if (success) { %> <p style="color:green;"><%= success %></p> <% } %>
 <% if (error) { %> <p style="color:red;"><%= error %></p> <% } %>
 
-<form action="/profile/update" method="POST" enctype="multipart/form-data">
-    <div style="text-align: center; margin-bottom: 20px;">
-        <% if (user.avatar) { %>
-            <img src="<%= user.avatar %>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
-        <% } else { %>
-            <div style="width: 100px; height: 100px; border-radius: 50%; background: #ccc; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: #666;">No Avatar</div>
-        <% } %>
-        <br><br>
-        <input type="file" name="avatar" accept="image/*">
-    </div>
-
+<form action="/profile/update" method="POST">
     <label>Username:</label>
     <input type="text" name="username" value="<%= user.username %>" required>
     
@@ -27,5 +12,4 @@
     
     <button type="submit">Update Profile</button>
 </form>
-
 <%- include('partials/footer') %>

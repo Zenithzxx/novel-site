@@ -33,11 +33,6 @@
     <% } else { %>
         <% novels.forEach(function(novel) { %>
             <div class="novel-card">
-                <% if (novel.cover_image) { %>
-                    <img src="<%= novel.cover_image %>" alt="Cover" class="cover-img">
-                <% } else { %>
-                    <div class="cover-placeholder">No Cover</div>
-                <% } %>
                 <div class="card-body">
                     <h3><%= novel.title %></h3>
                     <span class="genre-tag"><%= novel.genre %></span>
@@ -48,7 +43,6 @@
         <% }) %>
     <% } %>
 </div>
-
 <% if (totalPages > 1) { %>
     <div class="pagination">
         <% if (currentPage > 1) { %>
