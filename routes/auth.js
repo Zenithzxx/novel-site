@@ -43,15 +43,16 @@ router.post('/login', async (req, res) => {
             return res.render('login', { error: 'Incorrect password' });
         }
 
-        req.session.user = { id: user.id, username: user.username, role: user.role };
+        req.session.user = { id: user.id, username: user.username, role: user.role, title: user.title };
         
-                if (user.role === 'admin') {
+        if (user.role === 'admin') {
             res.redirect('/admin-dashboard');
         } else {
-            res.redirect('/'); // <--- CHANGE THIS TO '/'
+            res.redirect('/');
         }
     } catch (err) {
-        res.send('Error: ' + err.message);
+        console.error("Login Error:", err.message); // <-- ADD THIS LINE
+        res.status(500).send('Internal Server Error');
     }
 });
 
