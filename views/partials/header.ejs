@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novel Pub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-    <!-- Prevent flash of white screen before dark mode loads -->
     <script>
         if (localStorage.getItem('darkMode') === 'enabled') {
             document.documentElement.classList.add('dark-mode');
@@ -13,20 +15,25 @@
     </script>
 </head>
 <body>
-    <nav>
-        <h1><a href="/" style="text-decoration:none; color:white;">NovelPub</a></h1>
-                <div>
-            <a href="#" id="dark-mode-toggle" style="font-size: 20px;">🌙</a>
+    <!-- Sticky Reading Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="myBar"></div>
+    </div>
+
+    <nav class="main-nav">
+        <h1><a href="/">NovelPub</a></h1>
+        <div class="nav-links">
+            <a href="#" id="dark-mode-toggle">🌙</a>
             <% if (user) { %>
                 <a href="/notifications" style="position: relative;">🔔
-                    <% if (unreadNotifications > 0) { %>
-                        <span style="background: red; color: white; border-radius: 50%; padding: 1px 5px; font-size: 10px; position: absolute; top: -5px; right: -8px;"><%= unreadNotifications %></span>
+                    <% if (locals.unreadNotifications > 0) { %>
+                        <span class="notif-badge"><%= unreadNotifications %></span>
                     <% } %>
                 </a>
-                <a href="/my-library">My Library</a>
-                <a href="/profile">My Profile</a>
+                <a href="/my-library">Library</a>
+                <a href="/profile">Profile</a>
                 <% if (user.role === 'admin') { %>
-                    <a href="/admin-dashboard" style="background: #e67e22; padding: 5px 10px; border-radius: 4px; color: white;">Admin</a>
+                    <a href="/admin-dashboard" class="admin-btn">Admin</a>
                 <% } %>
                 <a href="/logout">Logout</a>
             <% } else { %>
