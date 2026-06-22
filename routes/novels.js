@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const checkAchievements = require('../helpers/achievements');
 const { requireLogin, requireAdmin } = require('../middleware/authMiddleware');
 
 // Home Page
